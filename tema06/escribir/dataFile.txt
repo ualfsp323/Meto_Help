@@ -1,0 +1,5 @@
+name,surnames,age
+Raquel,Jiménez López,23
+Juan,Pérez Rodríguez,17
+Torcuato,Gómez García,46
+Javi,Criado Carcelén,5
