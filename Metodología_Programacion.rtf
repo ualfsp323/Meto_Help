@@ -1,0 +1,278 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang3082{\fonttbl{\f0\fnil\fcharset0 Calibri;}{\f1\fnil Consolas;}}
+{\colortbl ;\red0\green0\blue255;\red0\green0\blue0;}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\sa200\sl276\slmult1\f0\fs22\lang10 Programa conjuntoDatos\par
+Cabecera Calle     Numero      Piso\par
+F1              Mayor        12           5B\par
+F2              Juan            10           3C\par
+F3\par
+Usamos (;) para separar. (archivo csv)\par
+\par
+(Poner throws IOException)\par
+private File archivoTexto;\par
+private String separador; \par
+private Locale locale; \par
+private List cabecera; \par
+private int numeroLineas; \par
+private int numeroColumnas; \par
+private double[][] datos; \par
+\par
+public ConjuntoDatos(File archivoTexto, String separador, Locale locale) throws Exception \{\par
+ \tab super(); \par
+\tab this.archivoTexto = archivoTexto; \par
+\tab this.separador = separador; \par
+\tab this.locale = locale;\par
+\tab this.numeroLineas = numLineas(archivoTexto); \par
+\tab this.numeroColumnas = numColumnas(archivoTexto);\par
+\tab this.cabecera = cabecera(archivoTexto); \par
+\tab this.datos = leerDatos(archivoTexto, numeroLineas, numeroColumnas); \par
+\}\par
+\par
+private List cabecera(File archivoTexto) throws IOException \{\par
+FileReader fr = new FileReader(archivoTexto); // Crea un documento fuera de java (apunta fuera)//\par
+BufferedReader br = new BufferedReader(fr); //Lee el archivo\par
+\par
+String cadena; \par
+cadena = br.readLine(); // lee una linea.\par
+ArrayList cabecera = new ArrayList(); // creamos una lista. \par
+Scanner scanner = new Scanner(cadena); // Creamos un scanner.\par
+scanner.useDelimiter(this.separador); //Indica el separador \par
+scanner.useLocale(this.locale); // Indica donde est\'e1 el archivo\par
+\par
+int i = 0; \par
+while (scanner.hasNext()) \{    //Mientras hasNext() = true se ejecutar\'e1 el bucle. \par
+\tab cabecera.add(scanner.next()); // A\'f1ade el valor siguiente. \par
+\tab i++; // Incrementa la variable que va contando las iteracciones \par
+\}\par
+return cabecera; \par
+\}\par
+private int numLineas(File archivoTexto) throws IOException \{\par
+\tab FileReader fr = new FileReader(archivoTexto); // Creamos archivo que apunta fuera\par
+\tab BufferedReader br = new BufferedReader(fr); // Creamos un buffered para que lea. \par
+\par
+\tab int numLineas = 0; // Creamos una variable inicializada a 0 que nos ir\'e1 almacenando las l\'edneas.\par
+\tab while ((br.readLine()) != null) \{ // Se ejecutar\'e1 mientras sea distinto de null(no hay nada)\par
+\tab\tab numLineas += 1; (Suma uno a la variable)\par
+\tab\}\par
+br.close(); \par
+return numLineas - 1; // retorna numero de lineas - 1 porque la cabecera no se cuenta. \par
+\}\par
+\par
+private int numColumnas(File archivoTexto) throws IOException  \{\par
+\tab FileReader fr = new FileReader(archivoTexto); // Creamos archivo que apunta fuera.\par
+\tab BufferedReader br = new BufferedReader(fr); // Creamos buffered para que lea.\par
+\par
+\tab String cadena; // Creamos un String donde cargaremos las lineas que nos lea el buffered//\par
+\tab int numColumnas = 0; // Variable que nos almacenar\'e1 numero de columnas. \par
+\tab cadena = br.readLine(); // buffered lee una linea\par
+\tab Scanner scanner = new Scanner(cadena); // Creamos un Scanner\par
+\tab scanner.useDelimiter(";"); // Indicamos delimitador. Tener en cuenta cual nos dice que es. \par
+\par
+\tab while (scanner.hasNext()) \{ // Se ejecutar\'e1 mientras scanner tenga un siguente (hasNext = true)//\par
+\tab\tab scanner.next(); // Pasa al siguiente \par
+\tab\tab numColumnas += 1; // Suma uno a la variable. \par
+\tab\}\par
+br.close(); // cierra el buffered\par
+return numColumnas; // retorna numero de columnas. \par
+\}\par
+Otra opcion String [] aux = cadena.split(","); \par
+\par
+public double[] getColumna(int columna) throws Exception \{\par
+\tab if (columna < 0 && columna > numColumnas) \{ // Comprueba que sea valida el n\'famero de columas//\par
+\tab\tab throw new Exception("Columna no valida"); // lanza excepci\'f3n en caso de que no//\par
+\tab\}\par
+\par
+\tab double[] tempA = new Double(numeroLineas); //Creamos un array y le metemos numero de lineas como \par
+\par
+\tab for (int i = 0; i < numeroLineas; i++) \{\par
+\tab\tab tempA[i] = datos[i][columna];  // introducimos \par
+\tab\}\par
+\tab return tempA; \par
+\}\par
+\par
+public double[] getColumna(String columna) throws Exception \{\par
+\tab int indice = 0; \par
+\tab boolean encontrado = false; \par
+\tab int i = 0; \par
+\par
+\tab for (Iterator iterator = cabecera.iterator(); iterator.hasNext();) \{ // Iteramos la cabecera hatsa que hasNext = false// \par
+\tab\tab String cadena = (String) iterator.next(); //Pasa al siguiente de iterator\par
+\par
+\tab\tab if (cadena.equals(columna)) \{ //Cadena es igual que columna\par
+\tab\tab\tab indice = 1; \par
+\tab\tab\tab encontrado = true; // Ha encontrado la columna. \par
+\tab\tab\tab break; // rompe bucle. \par
+\tab\tab\}\par
+\tab\tab i++; \par
+\tab\tab if (!encontrado) \{\par
+\tab\tab\tab throw = new Exception("Columna no valida"); \par
+\tab\tab\}\par
+\tab return getColumna(cadena); \par
+\}\par
+\par
+Hay que poner la barra (\\) dos veces para escapar de la barra porque es la que utilizamos para "\\n" (salto de linea) o "\\t" (tabulador). Se ponen dos porque de otra manera se procesa. Ej: "C:{{\field{\*\fldinst{HYPERLINK "\\\\\\\\directory\\\\"}}{\fldrslt{\\\\directory\\\ul0\cf0}}}}\f0\fs22 "\par
+Tambi\'e9n se puede usar la barra "/" de esta forma: ./src/tema06/escribir\par
+Read - lee car\'e1cter a car\'e1cter - byte a byte. Soluci\'f3n: usar buffered que lee l\'edneas.\par
+FileReader - lee todo el archivo pero no se puede usar siempre. Lee todo y crea un string y va  metiendo lo leido en un array. \par
+Scanner - leer\'e1 m\'e1s eficientemente \par
+Split - Parecido a Scanner \par
+Stream - \par
+Write - escribe letra a letra \par
+fw.write("H")\par
+fw.write("o")\par
+fw.write("l")\par
+fw.write("a")\par
+fw.write(10)\par
+El 10 lo pasa a c\'f3digo ASCII que lo que hace es salto de l\'ednea. \par
+FileWriter - escribe \par
+PrintWriter - se crea a partir de FileWriter o BufferedWriter o File. Equivalente a Scanner. \par
+try \{\} catch \{\} finally \{try\{\}, catch \{\} \}\par
+Siempre cerrar lo que se usa. br.close(), fr.close(), scanner.close()\par
+try with resources \par
+try (BufferedReader br = new BufferedReader(new FileReader(file)) \{\par
+\} catch \{\par
+\}\par
+Con lo anterior no hace falta finally ni close, porque lo cierra por ti.\par
+\par
+Ejercicio:\par
+Nombre      Apellidos      Edad\par
+Mar\'eda          L\'f3pez               23\par
+public void exportaDatosColumna(String nombreColumna) \{\par
+\par
+\}\par
+public String[] getDatosColumna(int numColumna) \{\par
+\par
+\}\par
+\par
+Este m\'e9todo crear\'e1 un archivo ColumnaEdad.txt y su contenido ser\'e1 23, 17, 46, 5. \par
+ \par
+Examen de metodolog\'eda. \par
+import java.io.BufferedReader; \par
+Segundo ejercicio. \par
+Matriz2DReal \par
+convocatoriaextraordinaria\par
+elementos: double[][]\par
+nFilas: int\par
+nCols: int \par
+Matriz2DReal(elementos: double[][]) \par
+getFilas(): int \par
+getCols(): int \par
+getElementos(): double[][]\par
+imprime(): void \par
+productoEscalar(u: double[], y:double[]): double \par
+traspuesta(): Matriz2DReal\par
+suma(m: Matriz2DReal): Matriz2DReal\par
+opuesta(): Matriz2DReal\par
+producto(\par
+\par
+Matriz2DRealDAO static\par
+escribirATexto(matriz: Matriz2DReal, file: File): void\par
+try (BufferedWriter bw = new BufferedWriter(new FileWriter(file) \{\par
+\tab int nFilas = matriz.getnFilas(); \par
+\tab int nColumnas = matriz.getCols(); \par
+\tab double[][] elementos = matriz. getElementos(); \par
+\par
+\tab bw.write("NumeroFilas;NumeroColumnas");\par
+\tab bw.newLine(); \par
+\tab bw.write(nFilas + ";" + nColumnas); \par
+\tab bw.newLine(); \par
+\par
+\tab for (int i = 0; i < nFilas; i++) \{\par
+\tab\tab for (int j = 0; j < nColumnas; j++) \{\par
+\tab\tab\tab bw.write(elementos[i][j] + ""); \par
+\tab\tab\tab if (j < nColumnas - 1) \{\par
+\tab\tab\tab\tab bw.write(";"); \par
+\tab\tab\tab\tab\}\par
+\tab\tab\}\par
+\tab\}\par
+\tab if ( i < nFilas - 1) \{\par
+\tab\tab bw.newLine(); \par
+\tab\} \par
+\} catch (IOException) \{\par
+\tab e.printStackTrace();\par
+\}\par
+\}\par
+leerDeTexto(file: File): Matriz2DReal\par
+Matriz2DReal matriz = null; \par
+try (BufferedReader br = new BufferedReader(new FileReader(file))) \{\par
+\tab String linea; \par
+\tab br.readLine(); //leo la cabecera y no la proceso. No la guardo en ninguna variable. \par
+\tab //leo las dimensiones de la matriz\par
+\tab linea = br.readLine(); \par
+\tab Scanner sc = new Scanner(linea); \par
+\tab sc.useDelimiter(";"); \par
+\tab int nFilas = sc.nextInt(); \par
+\tab int nColumnas = sc.nextIn(); \par
+\tab double  [][] elementos = new Double[nFilas][nColumnas]; \par
+\tab\par
+\tab //leo los elementos de la matriz\par
+\tab int indiceFilas = 0; \par
+\tab while (linea = br.readLine() != null) \{\par
+\tab\tab sc.new Scanner(linea); \par
+\tab\tab sc.useDelimiter(";");\par
+\tab\tab sc.useLocale(Locale.US); \par
+\par
+\tab\tab int indiceColumnas = 0; \par
+\tab\tab while (sc.hasNext()) \{\par
+\tab\tab\tab elementos[indiceFilas][indiceColumnas]; \par
+\tab\tab\tab sc.nextDouble(); \par
+\tab\tab\tab indiceColumas++;\par
+\tab\tab\}\par
+\tab\tab indiceFilas++;\par
+\tab\}\par
+matriz = new Matriz2DReal(elementos);\par
+\tab\par
+escribirABinario(matriz: Matriz2DReal, file: File): void\par
+try (DataOutputStream dos = new DataOutputStream(new FileOutputStream(file))) \{\par
+dos.writeInt();\par
+dos.writeInt();\par
+for (int i = 0; i < nFilas; i++) \{\par
+\tab for (int j = 0; j < nColumnas; j++) \{\par
+\tab\tab dos.writeDouble(matriz[i][j]); \par
+\tab\}\par
+\} \par
+leerDeBinario(file: File): \par
+\par
+Matriz.dat\par
+Numero filas          Numero columnas\par
+3                                    3\par
+1.1, 1.2, 1.3\par
+2.1, 2.2, 2.3\par
+3.1, 3.2, 3.3\par
+\par
+Ejercicio 1 \par
+GenericQueue<E>\par
+\par
+private int k; \par
+private int n; \par
+private GenericQueue<E> cola; \par
+\par
+public GenericJosephus(int k, int n, E[] elementos) \{\par
+\tab this.k = k;\par
+\tab this.n = n; \par
+\tab cola = \par
+getCola(): GenericQueue<E> \par
+return cola; \par
+\par
+@Override\par
+toString(): String \par
+return "Problema de Josephus: k = " + k + ", n = " + n + "/n" + cola.toString(); \par
+\par
+ordenEliminar(cola: GenericQueue<E): String\par
+String salida = " "; \par
+if ()\par
+else \par
+salida = "Orden de eleminacion: \\n"; \par
+while (cola.getSize() != 0) \{\par
+\tab for (int i = 1; i < k; i++) \{\par
+\tab\tab cola.queue(\par
+\par
+public interface Serializable. No tiene codigo porque identifica los objetos que pueden serializables.  Banco, CuentaCorriente y Movimiento\par
+\par
+public double getSaldo() \{\par
+double saldo = 0.0; \par
+Crear object outputStream y escribimos\par
+Crear object imputstream y leer\par
+Class not found exception e; \cf2\f1\fs20\par
+}
+ 
